@@ -1,0 +1,16 @@
+---
+- name: ensure that packages are up to date
+  apt: upgrade=yes update_cache=yes
+
+- name: ensure that base dependencies are present
+  apt: name={{ item }} state=present
+  with_items:
+    - ufw
+
+- name: ensure that the firewall rules are configured
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - 22
+
+- name: ensure that the firewall policy is set
+  ufw: state=enabled policy=deny
